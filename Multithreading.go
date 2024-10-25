@@ -35,8 +35,8 @@ func main() {
 	cep := "09572320"
 	ch := make(chan Result)
 
-	go fetchFromBrasilAPI(cep, ch)
 	go fetchFromViaCEP(cep, ch)
+	go fetchFromBrasilAPI(cep, ch)
 
 	select {
 	case result := <-ch:
@@ -44,23 +44,9 @@ func main() {
 			fmt.Printf("Erro da API %s: %s\n", result.Source, result.Error)
 		} else {
 			fmt.Printf("Resultado da API %s\n", result.Source)
-			fmt.Printf("CEP: %s\n", result.Adress.Cep)
-			fmt.Printf("Logradouro: %s\n", result.Adress.Logradouro)
-			fmt.Printf("Complemento: %s\n", result.Adress.Complemento)
-			fmt.Printf("Bairro: %s\n", result.Adress.Bairro)
-			fmt.Printf("Localidade: %s\n", result.Adress.Localidade)
-			fmt.Printf("UF: %s\n", result.Adress.Uf)
-			fmt.Printf("IBGE: %s\n", result.Adress.Ibge)
-			fmt.Printf("GIA: %s\n", result.Adress.Gia)
-			fmt.Printf("DDD: %s\n", result.Adress.Ddd)
-			fmt.Printf("SIAFI: %s\n", result.Adress.Siafi)
-
-			fmt.Printf("State: %s\n", result.Adress.State)
-			fmt.Printf("City: %s\n", result.Adress.City)
-			fmt.Printf("Neighborhood: %s\n", result.Adress.Neighborhood)
-			fmt.Printf("Street: %s\n", result.Adress.Street)
+			printFields(result.Adress)
 		}
-	case <-time.After(2 * time.Second):
+	case <-time.After(1 * time.Second):
 		fmt.Println("Timeout")
 	}
 }
